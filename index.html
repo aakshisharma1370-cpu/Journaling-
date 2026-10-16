@@ -1,0 +1,1053 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E1812">
+<title>my little study</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  /* ---------- themes ----------
+     every theme sets the same variables; cards are always paper-coloured,
+     the page chrome (background, text, nav) changes around them */
+  :root, :root[data-theme="dark"]{
+    --walnut:#1E1812; --glow:#3a2c1f; --text:#F3EBDD; --text-mute:#a89a88; --line:#3b3026;
+    --nav:rgba(30,24,18,.96);
+    --paper:#F3EBDD; --paper-2:#E9DEC8;
+    --ink:#2E2620; --muted:#7A6A5A;
+    --sage:#8FA58A; --rose:#D9A7A0; --amber:#E0A458; --kuromi:#7B5EA7;
+  }
+  :root[data-theme="soft"]{
+    --walnut:#EFE6D4; --glow:#faf4e6; --text:#3b2f25; --text-mute:#8a7a68; --line:#d9cbb0;
+    --nav:rgba(239,230,212,.96);
+    --paper:#FBF6EC; --paper-2:#EFE4CF;
+    --ink:#3b2f25; --muted:#8a7a68;
+    --sage:#8FA58A; --rose:#C9948C; --amber:#C98B3E; --kuromi:#8C6B4F;
+  }
+  :root[data-theme="ghibli"]{
+    --walnut:#2F3D33; --glow:#3d5240; --text:#EEF3E6; --text-mute:#B5C4AE; --line:#44594a;
+    --nav:rgba(47,61,51,.96);
+    --paper:#EEF3E6; --paper-2:#DCE7D2;
+    --ink:#2C3A2E; --muted:#6f8270;
+    --sage:#8FB38A; --rose:#E0A7A0; --amber:#E3B25E; --kuromi:#5E8C6A;
+  }
+  :root[data-theme="kuromi"]{
+    --walnut:#1a1424; --glow:#2b1f3d; --text:#F1E9FA; --text-mute:#b7a8cc; --line:#3a2d52;
+    --nav:rgba(26,20,36,.96);
+    --paper:#EDE6F7; --paper-2:#DCD0EE;
+    --ink:#2a1f3a; --muted:#6e5f88;
+    --sage:#A8B5E0; --rose:#F4A6C0; --amber:#F2A7C9; --kuromi:#7B5EA7;
+  }
+
+  :root{
+    --radius:18px;
+    --serif:"Cormorant Garamond", Georgia, serif;
+    --type:"Special Elite", "Courier New", monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{background:var(--walnut);color:var(--text);font-family:var(--serif);font-size:18px;min-height:100dvh;transition:background .5s,color .5s}
+  body{padding:env(safe-area-inset-top) 0 calc(96px + env(safe-area-inset-bottom));
+    background:radial-gradient(circle at 80% 0%, var(--glow) 0%, transparent 55%), var(--walnut);}
+  header{padding:22px 20px 8px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+  header h1{font-style:italic;font-weight:400;font-size:28px;color:var(--text)}
+  header .xp{font-family:var(--type);font-size:13px;color:var(--amber);text-align:right}
+  .bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:4px;width:120px;margin-left:auto}
+
+  .themes{display:flex;gap:8px;padding:4px 20px 0;overflow-x:auto;scrollbar-width:none}
+  .themes::-webkit-scrollbar{display:none}
+  .themes button{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:6px 12px;font-size:13px;font-family:var(--type);
+    background:transparent;color:var(--text-mute);border:1px solid var(--line)}
+  .themes button i{width:12px;height:12px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,.25)}
+  .themes button.on{color:var(--text);border-color:var(--amber)}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--sage),var(--amber));width:0;transition:width .5s}
+
+  main{padding-block:8px;padding-inline:max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px))}
+  section{display:none;animation:fade .35s ease}
+  section.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .card{background:var(--paper);color:var(--ink);border-radius:var(--radius);padding:18px;margin:12px 0;
+    box-shadow:0 8px 24px rgba(0,0,0,.35);position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;inset:6px;border:1px solid rgba(122,106,90,.25);border-radius:14px;pointer-events:none}
+  .card h2{font-style:italic;font-weight:600;font-size:22px;margin-bottom:8px}
+  .label{font-family:var(--type);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .sub{color:var(--muted);font-size:15px;font-style:italic}
+
+  textarea,input,select{width:100%;font:inherit;font-size:17px;color:var(--ink);background:rgba(255,255,255,.45);
+    border:1px dashed rgba(46,38,32,.35);border-radius:12px;padding:10px 12px;margin-top:8px;outline:none}
+  textarea{min-height:110px;resize:vertical;line-height:1.5;background-image:repeating-linear-gradient(transparent 0 27px,rgba(46,38,32,.08) 27px 28px);background-attachment:local}
+  textarea:focus,input:focus,select:focus{border-style:solid;border-color:var(--kuromi)}
+
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .row>*{flex:1;min-width:0}
+  .row>.grow-0{flex:0 0 auto}
+
+  button{font:inherit;border:0;border-radius:999px;padding:10px 18px;min-height:44px;background:var(--ink);color:var(--paper);cursor:pointer;font-size:16px}
+  button.ghost{background:transparent;color:var(--ink);border:1px solid rgba(46,38,32,.4)}
+  button.kuro{background:var(--kuromi);color:#fff}
+  button:active{transform:scale(.97)}
+
+  .moods{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .moods button{padding:6px 12px;font-size:15px;background:transparent;color:var(--ink);border:1px solid rgba(46,38,32,.35)}
+  .moods button.on{background:var(--sage);border-color:var(--sage);color:#fff}
+
+  ul.list{list-style:none;margin-top:8px}
+  ul.list li{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 0;border-bottom:1px dotted rgba(46,38,32,.25)}
+  ul.list li:last-child{border-bottom:0}
+  ul.list input[type=checkbox]{width:20px;height:20px;accent-color:var(--kuromi);flex:0 0 auto;margin:0}
+  ul.list .t{flex:1;min-width:120px;font-size:17px}
+  ul.list .t.done{text-decoration:line-through;color:var(--muted)}
+  .chip{font-family:var(--type);font-size:11px;background:var(--paper-2);padding:3px 8px;border-radius:999px;color:var(--muted);white-space:nowrap}
+  .chip.xp{background:var(--sage);color:#fff}
+  .chip.focus{background:#e9d9c0;color:var(--ink)}
+  .x{background:none;color:var(--muted);padding:2px 6px;font-size:18px;border-radius:0}
+  .weights{display:flex;gap:6px;margin-top:8px}
+  .weights button{flex:1;padding:8px 4px;font-size:14px;background:transparent;color:var(--ink);border:1px solid rgba(46,38,32,.35)}
+  .weights button.on{background:var(--kuromi);border-color:var(--kuromi);color:#fff}
+
+  /* pomodoro */
+  .timer{font-family:var(--type);font-size:56px;text-align:center;letter-spacing:.04em;margin:6px 0}
+  .candle{width:70px;height:110px;margin:0 auto;position:relative}
+  .candle .wax{position:absolute;bottom:0;left:10px;width:50px;height:80px;background:linear-gradient(#f7ecd8,#e6d4b2);border-radius:4px}
+  .candle .flame{position:absolute;top:-6px;left:27px;width:16px;height:30px;border-radius:50% 50% 40% 40%;
+    background:radial-gradient(circle at 50% 70%,#fff8d0,var(--amber) 60%,transparent 70%);transform-origin:bottom;animation:flick 1.3s infinite alternate}
+  @keyframes flick{from{transform:scale(1,1) rotate(-2deg)}to{transform:scale(.92,1.06) rotate(2deg)}}
+  .candle.out .flame{display:none}
+
+  /* pet */
+  .pet{text-align:center}
+  .pet img{width:var(--pet-size,140px);height:auto;transition:width .6s;filter:drop-shadow(0 8px 10px rgba(0,0,0,.2))}
+  .pet .hop{animation:hop 2.4s ease-in-out infinite}
+  @keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .stage{font-family:var(--type);font-size:12px;color:var(--kuromi)}
+
+  /* budget */
+  .sum{display:flex;justify-content:space-between;align-items:center;font-family:var(--type);font-size:15px;padding:6px 0;border-bottom:1px dotted rgba(46,38,32,.25)}
+  .neg{color:#9a4a3c}.pos{color:#4f6b4a}
+
+  /* memory */
+  .day{border-left:3px solid var(--rose);padding:6px 0 10px 12px;margin:12px 0}
+  .day .d{font-family:var(--type);font-size:12px;color:var(--muted);margin-bottom:4px}
+  .day p{margin-top:4px;font-size:16px}
+  .day .stats{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+
+  /* habits */
+  .habit-chart svg{width:100%;height:auto;display:block;margin-top:4px}
+  .habit-chart text{font-family:var(--type);font-size:12px;fill:var(--ink)}
+  .habit-chart .grid{stroke:rgba(46,38,32,.18);stroke-dasharray:2 3}
+  .habit-chart .streak{font-family:var(--type);font-size:11px;color:var(--ink)}
+
+  /* memory lane */
+  .tabs{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+  .tabs button{flex:1;min-width:64px;padding:8px 4px;font-size:14px;background:transparent;color:var(--ink);border:1px solid rgba(46,38,32,.35)}
+  .tabs button.on{background:var(--kuromi);border-color:var(--kuromi);color:#fff}
+  .summary{margin-top:12px;font-size:17px;line-height:1.5}
+  .summary p{margin-top:4px}
+  .summary b{font-weight:600}
+  .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px;margin-top:10px}
+  .thumbs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:var(--paper-2);box-shadow:0 2px 6px rgba(0,0,0,.2)}
+
+  /* nav */
+  nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-around;
+    background:var(--nav);backdrop-filter:blur(6px);border-top:1px solid var(--line);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+  nav button{background:none;color:var(--text-mute);font-size:13px;font-family:var(--type);padding:6px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;border-radius:12px;flex:1}
+  nav button span.i{font-size:20px;line-height:1}
+  nav button.on{color:var(--amber)}
+
+  .toast{position:fixed;left:50%;top:14px;transform:translateX(-50%) translateY(-120%);background:var(--kuromi);color:#fff;
+    padding:8px 16px;border-radius:999px;font-family:var(--type);font-size:14px;transition:transform .4s;z-index:9;white-space:nowrap}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .kuro-mark{font-family:var(--type);font-size:12px;color:var(--text-mute);text-align:center;margin-top:16px}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>my little study</h1>
+    <div class="sub" id="date"></div>
+  </div>
+  <div class="xp">
+    <div>lv <span id="lv">1</span> · <span id="xpTxt">0</span> xp</div>
+    <div class="bar"><i id="xpBar"></i></div>
+  </div>
+</header>
+
+<div class="themes" id="themes" role="group" aria-label="theme">
+  <button data-theme="dark"><i style="background:#1E1812"></i>dark academia</button>
+  <button data-theme="soft"><i style="background:#EFE6D4"></i>soft academia</button>
+  <button data-theme="ghibli"><i style="background:#2F3D33"></i>ghibli garden</button>
+  <button data-theme="kuromi"><i style="background:#1a1424"></i>kuromi night</button>
+</div>
+
+<main>
+
+  <!-- TODAY -->
+  <section id="s-today" class="on">
+    <div class="card">
+      <div class="label">today's page</div>
+      <h2 id="greet">good evening, ash</h2>
+      <div class="label" style="margin-top:10px">how are you feeling</div>
+      <div class="moods" id="moods"></div>
+      <textarea id="entry" placeholder="dear diary, today i..."></textarea>
+      <div class="row" style="margin-top:6px">
+        <button class="kuro" id="saveEntry">seal the page (+15 xp)</button>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="ghost grow-0" id="photoBtn">+ add photos</button>
+        <input id="photoIn" type="file" accept="image/*" multiple hidden>
+      </div>
+      <div id="todayPhotos" class="thumbs"></div>
+      <div class="sub" id="todayStats" style="margin-top:10px"></div>
+    </div>
+    <div class="card">
+      <div class="label">quote for today</div>
+      <p style="font-style:italic;margin-top:6px" id="quote"></p>
+    </div>
+  </section>
+
+  <!-- QUESTS -->
+  <section id="s-quests">
+    <div class="card">
+      <div class="label">quest log</div>
+      <h2>tasks & assignments</h2>
+      <input id="taskIn" placeholder="new quest or assignment...">
+      <div class="weights" id="weights">
+        <button data-w="10" class="on">small · 10</button>
+        <button data-w="25">medium · 25</button>
+        <button data-w="50">big · 50</button>
+      </div>
+      <div class="row" style="margin-top:4px">
+        <input id="taskDue" type="date" title="due date (optional)">
+        <button class="grow-0" id="addTask">add</button>
+      </div>
+      <ul class="list" id="tasks"></ul>
+    </div>
+
+    <div class="card">
+      <div class="label">pomodoro</div>
+      <h2>focus with a candle</h2>
+      <select id="taskPick" style="margin-top:6px"></select>
+      <div class="candle" id="candle"><div class="wax"></div><div class="flame"></div></div>
+      <div class="timer" id="clock">25:00</div>
+      <div class="row">
+        <button id="pomoGo">light it</button>
+        <button class="ghost grow-0" id="pomoReset">reset</button>
+      </div>
+      <div class="sub" style="text-align:center;margin-top:8px">each full session = +20 xp, 25 focus minutes on the picked quest, and a feed for totoro</div>
+    </div>
+    <div class="card">
+      <div class="label">soundtrack</div>
+      <h2>lofi & playlists</h2>
+      <div class="row" style="margin-top:8px">
+        <button id="lofiToggle" class="ghost">lofi off</button>
+      </div>
+      <div class="sub" style="margin-top:6px">built-in lofi beats that play softly while your candle is lit (works offline)</div>
+      <div class="label" style="margin-top:14px">spotify playlist</div>
+      <div class="row" style="margin-top:6px">
+        <input id="spLink" placeholder="paste a spotify playlist link">
+        <button class="grow-0" id="spSave">save</button>
+      </div>
+      <div id="spotifyBox" style="margin-top:8px"></div>
+      <div class="sub" style="margin-top:6px">spotify can't be paused by the timer, so use the play button in the player</div>
+    </div>
+  </section>
+
+  <!-- HABITS -->
+  <section id="s-habits">
+    <div class="card">
+      <div class="label">daily rituals</div>
+      <h2>habit tracker</h2>
+      <div class="row" style="margin-top:8px">
+        <input id="habitIn" placeholder="new habit (read 10 pages, stretch...)">
+        <button class="grow-0" id="addHabit">add</button>
+      </div>
+      <ul class="list" id="habits"></ul>
+      <div class="sub" style="margin-top:8px">ticking a habit today = +5 xp and a totoro feed · unticking takes both back</div>
+    </div>
+    <div class="card">
+      <div class="label">overview</div>
+      <h2>the last 15 days</h2>
+      <select id="habitScope" style="margin-top:6px"></select>
+      <div id="habitChart" class="habit-chart"></div>
+      <div class="sub" id="habitStats" style="text-align:center;margin-top:6px"></div>
+    </div>
+  </section>
+
+  <!-- PET -->
+  <section id="s-pet">
+    <div class="card pet">
+      <div class="label">your companion</div>
+      <h2 style="text-align:center">totoro</h2>
+      <div class="hop"><img id="petImg" src="totoro.jpg" alt="totoro"></div>
+      <div class="stage" id="stage">seedling</div>
+      <div class="sub" id="petMsg" style="margin-top:8px"></div>
+      <div class="row" style="margin-top:10px">
+        <button class="kuro" id="feed">feed (+5 xp)</button>
+      </div>
+      <div class="sub" style="margin-top:8px">fed <span id="fedCount">0</span> times</div>
+    </div>
+  </section>
+
+  <!-- MEMORY -->
+  <section id="s-memory">
+    <div class="card">
+      <div class="label">memory lane</div>
+      <h2>look back</h2>
+      <div class="tabs" id="periods">
+        <button data-p="week">7 days</button>
+        <button data-p="month">30 days</button>
+        <button data-p="year">year</button>
+        <button data-p="all">all</button>
+      </div>
+      <div id="summary" class="summary"></div>
+    </div>
+    <div class="card">
+      <div class="label">photos</div>
+      <h2>the pictures</h2>
+      <div id="photoGrid" class="thumbs"></div>
+    </div>
+    <div class="card">
+      <div class="label">on this day</div>
+      <div id="onThisDay" style="margin-top:6px"></div>
+    </div>
+    <div class="card">
+      <div class="label">pages</div>
+      <div id="memories"></div>
+    </div>
+    <div class="card">
+      <div class="label">keep it safe</div>
+      <h2>backup</h2>
+      <p class="sub">your journal lives in this browser. export a backup now and then so nothing gets lost, and import it on another device.</p>
+      <div class="row" style="margin-top:10px">
+        <button class="kuro" id="exportBtn">export backup</button>
+        <button class="ghost grow-0" id="importBtn">import</button>
+        <input id="importIn" type="file" accept="application/json" hidden>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUDGET -->
+  <section id="s-budget">
+    <div class="card">
+      <div class="label">coin purse</div>
+      <h2 id="monthTitle">this month</h2>
+      <div class="sum"><span>monthly budget</span><span><input id="budget" type="number" inputmode="decimal" style="width:120px;margin:0;padding:4px 8px" placeholder="0"></span></div>
+      <div class="sum"><span>spent</span><span id="spent">₹0</span></div>
+      <div class="sum"><span>left</span><span id="left">₹0</span></div>
+      <div class="row" style="margin-top:12px">
+        <input id="amt" type="number" inputmode="decimal" placeholder="amount (₹)">
+        <input id="cat" placeholder="what for">
+      </div>
+      <button class="kuro" id="addSpend" style="margin-top:8px;width:100%">log spend (+2 xp)</button>
+      <ul class="list" id="spends"></ul>
+    </div>
+  </section>
+
+  <div class="kuro-mark">made with a cup of tea and a bit of kuromi energy</div>
+</main>
+
+<nav>
+  <button class="on" data-go="today"><span class="i">✎</span>today</button>
+  <button data-go="quests"><span class="i">⚔</span>quests</button>
+  <button data-go="habits"><span class="i">✓</span>habits</button>
+  <button data-go="pet"><span class="i">☁</span>totoro</button>
+  <button data-go="memory"><span class="i">❀</span>memories</button>
+  <button data-go="budget"><span class="i">◎</span>budget</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  // ================= storage =================
+  const KEY = "journal-v2";
+  const FOCUS = 25 * 60;
+  const blank = { xp: 0, fed: 0, budget: 0, tasks: [], spends: [], habits: [], lofi: false, spotify: "", days: {}, pomo: { endAt: null, left: FOCUS, taskId: "" } };
+  let S;
+  try {
+    S = Object.assign({}, blank, JSON.parse(localStorage.getItem(KEY) || "null") || {});
+  } catch { S = structuredClone(blank); }
+  S.pomo = Object.assign({}, blank.pomo, S.pomo || {});
+  S.theme = S.theme || "dark";
+  // one-time: turn lofi on for everyone so the pomodoro plays music without a manual toggle
+  if (!S.lofiDefaulted) { S.lofi = true; S.lofiDefaulted = true; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
+
+  const $ = s => document.querySelector(s);
+  const pad = n => String(n).padStart(2, "0");
+  // LOCAL date key (so a day boundary is your midnight, not UTC)
+  const dayKey = (d = new Date()) => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  const today = () => dayKey();
+  const dayRec = (k = today()) => (S.days[k] ||= { mood: "", entries: [], done: [], focus: 0, xp: 0, fed: 0, spent: 0 });
+  const addDays = (k, n) => { const [y,m,d] = k.split("-").map(Number); return dayKey(new Date(y, m-1, d+n)); };
+  const escape = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+  // ================= xp & level =================
+  const LEVELS = ["seedling","sprout","little totoro","forest friend","big totoro","forest spirit"];
+  const xpFor = lv => 50 * lv;
+  function level() {
+    let lv = 1, rem = Math.max(0, S.xp);
+    while (rem >= xpFor(lv)) { rem -= xpFor(lv); lv++; }
+    return { lv, into: rem, need: xpFor(lv) };
+  }
+  function gain(n, msg) {
+    const before = level().lv;
+    S.xp = Math.max(0, S.xp + n);
+    dayRec().xp += n;
+    save();
+    if (n > 0) toast(`+${n} xp${msg ? " · " + msg : ""}`);
+    if (level().lv > before) setTimeout(() => toast(`level ${level().lv}! totoro grew`), 1300);
+  }
+
+  // ================= toast =================
+  let tt;
+  function toast(msg) {
+    const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 1800);
+  }
+
+  // ================= one refresh for everything =================
+  function refresh() {
+    renderHeader(); renderMoods(); renderTodayStats(); renderTasks(); renderPickers();
+    renderPet(); renderMemory(); renderBudget(); renderHabits(); renderTodayPhotos();
+  }
+
+  function renderHeader() {
+    const { lv, into, need } = level();
+    $("#lv").textContent = lv;
+    $("#xpTxt").textContent = `${into}/${need}`;
+    $("#xpBar").style.width = (into / need * 100) + "%";
+  }
+
+  // ================= nav =================
+  let current = "today";
+  function go(name) {
+    current = name;
+    document.querySelectorAll("section").forEach(s => s.classList.toggle("on", s.id === "s-" + name));
+    document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.go === name));
+    refresh();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  document.querySelectorAll("nav button").forEach(b => b.onclick = () => go(b.dataset.go));
+
+  // ================= today =================
+  const MOODS = ["✿ calm","☁ tired","☀ bright","☾ dreamy","✦ proud","☂ meh"];
+  function renderMoods() {
+    const mood = dayRec().mood;
+    $("#moods").innerHTML = MOODS.map(m => `<button class="${m === mood ? "on" : ""}" data-m="${m}">${m}</button>`).join("");
+    $("#moods").querySelectorAll("button").forEach(b => b.onclick = () => {
+      dayRec().mood = b.dataset.m; save(); refresh();
+    });
+  }
+  function renderTodayStats() {
+    const r = dayRec();
+    $("#todayStats").textContent = `${r.entries.length} page${r.entries.length===1?"":"s"} · ${r.done.length} quest${r.done.length===1?"":"s"} done · ${r.focus} min focused · ${r.fed} totoro feeds · ${Object.keys(r.habits||{}).length}/${S.habits.length} habits`;
+  }
+  const QUOTES = [
+    "a quiet hour is still an hour well spent.",
+    "small steps, candle still lit.",
+    "the page doesn't need to be perfect, only honest.",
+    "rest is also a chapter."
+  ];
+  $("#quote").textContent = QUOTES[new Date().getDate() % QUOTES.length];
+  const hour = new Date().getHours();
+  $("#greet").textContent = (hour < 12 ? "good morning" : hour < 18 ? "good afternoon" : "good evening") + ", ash";
+  $("#date").textContent = new Date().toLocaleDateString("en-IN", { weekday:"long", day:"numeric", month:"long" });
+
+  $("#saveEntry").onclick = () => {
+    const text = $("#entry").value.trim();
+    if (!text) return toast("write something first ✎");
+    dayRec().entries.push({ time: new Date().toLocaleTimeString("en-IN", {hour:"numeric", minute:"2-digit"}), text });
+    $("#entry").value = "";
+    gain(15, "page sealed"); refresh();
+  };
+
+  // ================= quests =================
+  let weight = 10;
+  document.querySelectorAll("#weights button").forEach(b => b.onclick = () => {
+    weight = +b.dataset.w;
+    document.querySelectorAll("#weights button").forEach(x => x.classList.toggle("on", x === b));
+  });
+
+  function renderTasks() {
+    const ul = $("#tasks");
+    const todayK = today();
+    const list = [...S.tasks].sort((a,b) => a.done - b.done || (a.due||"9999").localeCompare(b.due||"9999"));
+    ul.innerHTML = list.map(t => {
+      const overdue = t.due && !t.done && t.due < todayK;
+      return `
+      <li>
+        <input type="checkbox" data-id="${t.id}" ${t.done ? "checked" : ""} aria-label="done">
+        <span class="t ${t.done ? "done" : ""}">${escape(t.text)}</span>
+        ${t.focusMin ? `<span class="chip focus">${t.focusMin} min</span>` : ""}
+        ${t.due ? `<span class="chip" style="${overdue?"color:#9a4a3c":""}">${overdue?"overdue · ":"due "}${t.due.slice(5)}</span>` : ""}
+        <span class="chip xp">+${t.xp}</span>
+        <button class="x" data-del="${t.id}" aria-label="delete">×</button>
+      </li>`;
+    }).join("") || `<li><span class="sub">no quests yet — add one above</span></li>`;
+
+    ul.querySelectorAll("input[type=checkbox]").forEach(cb => cb.onchange = () => {
+      const t = S.tasks.find(x => x.id == cb.dataset.id);
+      if (!t) return;
+      if (cb.checked && !t.done) {
+        t.done = true; t.doneOn = today();
+        dayRec().done.push(t.text);
+        save(); gain(t.xp, "quest done");
+      } else if (!cb.checked && t.done) {
+        t.done = false;
+        dayRec(t.doneOn || today()).done = dayRec(t.doneOn || today()).done.filter(x => x !== t.text);
+        save(); gain(-t.xp);
+      }
+      refresh();
+    });
+    ul.querySelectorAll("[data-del]").forEach(b => b.onclick = () => {
+      S.tasks = S.tasks.filter(x => x.id != b.dataset.del);
+      if (S.pomo.taskId == b.dataset.del) S.pomo.taskId = "";
+      save(); refresh();
+    });
+  }
+
+  function renderPickers() {
+    const open = S.tasks.filter(t => !t.done);
+    const sel = $("#taskPick"), prev = sel.value || S.pomo.taskId;
+    sel.innerHTML = `<option value="">no particular quest</option>` +
+      open.map(t => `<option value="${t.id}">${escape(t.text)}</option>`).join("");
+    if ([...sel.options].some(o => o.value == prev)) sel.value = prev;
+  }
+  $("#taskPick").onchange = e => { S.pomo.taskId = e.target.value; save(); };
+
+  $("#addTask").onclick = () => {
+    const v = $("#taskIn").value.trim(); if (!v) return toast("name the quest first");
+    S.tasks.push({ id: Date.now(), text: v, done: false, xp: weight, focusMin: 0, due: $("#taskDue").value || "" });
+    $("#taskIn").value = ""; $("#taskDue").value = "";
+    save(); refresh();
+  };
+
+  // ================= pomodoro (survives reload) =================
+  let tick = null;
+  const remaining = () => S.pomo.endAt ? Math.max(0, Math.round((S.pomo.endAt - Date.now()) / 1000)) : S.pomo.left;
+  const running = () => !!S.pomo.endAt;
+
+  function paint() {
+    const r = remaining();
+    $("#clock").textContent = `${pad(Math.floor(r/60))}:${pad(r%60)}`;
+    $("#pomoGo").textContent = running() ? "pause" : (r < FOCUS ? "resume" : "light it");
+    $("#candle").classList.toggle("out", !running() && r >= FOCUS);
+  }
+
+  function startTicking() {
+    clearInterval(tick);
+    tick = setInterval(() => {
+      if (remaining() <= 0 && running()) completeSession();
+      else paint();
+    }, 1000);
+    paint();
+  }
+
+  function pause() {
+    S.pomo.left = remaining(); S.pomo.endAt = null; save(); paint(); stopLofi();
+  }
+  function start() {
+    if (running()) return pause();
+    S.pomo.taskId = $("#taskPick").value;
+    S.pomo.endAt = Date.now() + S.pomo.left * 1000;
+    save(); startTicking(); startLofi();
+  }
+
+  function completeSession() {
+    const minutes = Math.round(FOCUS / 60);
+    const t = S.tasks.find(x => x.id == S.pomo.taskId);
+    if (t) t.focusMin = (t.focusMin || 0) + minutes;
+    dayRec().focus += minutes;
+    dayRec().fed += 1;
+    S.fed = (S.fed || 0) + 1;
+    S.pomo = { endAt: null, left: FOCUS, taskId: S.pomo.taskId };
+    save();
+    stopLofi();
+    gain(20, t ? `${minutes} min on "${t.text.slice(0,18)}"` : "focus session");
+    startTicking();
+    refresh();
+  }
+
+  $("#pomoGo").onclick = start;
+  $("#pomoReset").onclick = () => {
+    S.pomo = { endAt: null, left: FOCUS, taskId: S.pomo.taskId }; save(); paint(); stopLofi();
+  };
+
+  // ================= pet =================
+  function renderPet() {
+    const { lv } = level();
+    const stage = LEVELS[Math.min(LEVELS.length-1, Math.floor((lv-1)/2))];
+    $("#stage").textContent = `${stage} · lv ${lv}`;
+    const size = Math.min(230, 110 + lv * 12);
+    document.documentElement.style.setProperty("--pet-size", size + "px");
+    $("#fedCount").textContent = S.fed || 0;
+    const msgs = ["he's content, humming quietly","totoro is waiting for another quest",
+                  "a leaf for your good work 🍃","he wants a snack from the studying shelf"];
+    $("#petMsg").textContent = msgs[(S.fed || 0) % msgs.length];
+  }
+  $("#feed").onclick = () => {
+    S.fed = (S.fed || 0) + 1; dayRec().fed += 1;
+    gain(5, "totoro fed"); refresh();
+  };
+
+  // ================= photos: stored in IndexedDB (much bigger than localStorage) =================
+  let dbp = null;
+  function openDB() {
+    if (!dbp) dbp = new Promise((res, rej) => {
+      const r = indexedDB.open("my-little-study", 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("photos");
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    });
+    return dbp;
+  }
+  async function idbPut(id, blob) {
+    const d = await openDB();
+    return new Promise((res, rej) => {
+      const t = d.transaction("photos", "readwrite");
+      t.objectStore("photos").put(blob, id);
+      t.oncomplete = res; t.onerror = () => rej(t.error);
+    });
+  }
+  async function idbGet(id) {
+    const d = await openDB();
+    return new Promise((res, rej) => {
+      const q = d.transaction("photos").objectStore("photos").get(id);
+      q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error);
+    });
+  }
+
+  // shrink phone photos to 1080px JPEG so a year of them stays small
+  async function shrink(file) {
+    const img = await createImageBitmap(file);
+    const k = Math.min(1, 1080 / Math.max(img.width, img.height));
+    const c = document.createElement("canvas");
+    c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+    c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+    return new Promise(res => c.toBlob(res, "image/jpeg", 0.82));
+  }
+
+  const urlCache = {};
+  async function urlFor(id) {
+    if (!urlCache[id]) {
+      const b = await idbGet(id);
+      if (!b) return "";
+      urlCache[id] = URL.createObjectURL(b);
+    }
+    return urlCache[id];
+  }
+  function paintThumbs(el, ids) {
+    el.innerHTML = ids.map(id => `<img alt="memory photo" data-pid="${id}">`).join("");
+    el.querySelectorAll("img").forEach(im => urlFor(im.dataset.pid).then(u => { if (u) im.src = u; }));
+  }
+  function renderTodayPhotos() { paintThumbs($("#todayPhotos"), dayRec().photos || []); }
+
+  $("#photoBtn").onclick = () => $("#photoIn").click();
+  $("#photoIn").onchange = async e => {
+    const files = [...e.target.files];
+    if (!files.length) return;
+    toast("saving photos…");
+    let saved = 0;
+    for (const f of files) {
+      const id = "p" + Date.now() + Math.random().toString(36).slice(2, 7);
+      try {
+        await idbPut(id, await shrink(f));
+        const r = dayRec(); (r.photos ||= []).push(id); saved++;
+      } catch { /* skip a file that can't be read */ }
+    }
+    e.target.value = "";
+    save(); refresh();
+    toast(saved ? `${saved} photo${saved > 1 ? "s" : ""} saved ♡` : "couldn't read those photos");
+  };
+
+  // ================= memory lane: periods, summaries, photos =================
+  let memPeriod = "week";
+  const STOP = new Set("this that with have from were just they them then there really very about into today going went been much more some what when like feel felt also still only over".split(" "));
+
+  function rangeKeys(p) {
+    const t = today();
+    const back = n => Array.from({ length: n }, (_, i) => addDays(t, -i));
+    if (p === "week") return back(7);
+    if (p === "month") return back(30);
+    if (p === "year") return back(365);
+    return Object.keys(S.days).sort().reverse();
+  }
+
+  function summarize(keys) {
+    const recs = keys.map(k => [k, S.days[k]]).filter(([, d]) => d);
+    const moods = {}, words = {};
+    let written = 0, quests = 0, focus = 0, habits = 0, photos = 0, xp = 0;
+    recs.forEach(([, d]) => {
+      if (d.entries.length) written++;
+      if (d.mood) moods[d.mood] = (moods[d.mood] || 0) + 1;
+      quests += d.done.length; focus += d.focus;
+      habits += Object.keys(d.habits || {}).length;
+      photos += (d.photos || []).length; xp += d.xp;
+      d.entries.forEach(e => e.text.toLowerCase().split(/[^a-z']+/).forEach(w => {
+        if (w.length > 3 && !STOP.has(w)) words[w] = (words[w] || 0) + 1;
+      }));
+    });
+    const topMood = Object.entries(moods).sort((a, b) => b[1] - a[1])[0];
+    const topWords = Object.entries(words).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([w]) => w);
+    return { days: recs.length, written, topMood, quests, focus, habits, photos, xp, topWords };
+  }
+
+  function renderSummary(p, keys) {
+    const s = summarize(keys);
+    const label = { week: "this week", month: "the last 30 days", year: "the last year", all: "all time" }[p];
+    if (!s.days) {
+      $("#summary").innerHTML = `<p class="sub">nothing written ${label} yet. every day you open the app gets kept here.</p>`;
+      return;
+    }
+    const of = p === "all" ? s.days : keys.length;
+    const lines = [
+      `you wrote on <b>${s.written}</b> of ${of} day${of > 1 ? "s" : ""}`,
+      s.topMood ? `mostly <b>${escape(s.topMood[0])}</b>, on ${s.topMood[1]} day${s.topMood[1] > 1 ? "s" : ""}` : null,
+      `<b>${s.quests}</b> quests done · <b>${s.focus}</b> min focused · <b>${s.habits}</b> habit ticks`,
+      `<b>${s.photos}</b> photo${s.photos === 1 ? "" : "s"} · <b>${s.xp}</b> xp earned`,
+      s.topWords.length ? `words that came up most: ${s.topWords.map(escape).join(", ")}` : null
+    ].filter(Boolean);
+    $("#summary").innerHTML = `<div class="label" style="margin-bottom:4px">${label}</div>` + lines.map(l => `<p>${l}</p>`).join("");
+  }
+
+  function renderOnThisDay() {
+    const dd = pad(new Date().getDate());
+    const hits = Object.keys(S.days).filter(k => k < today() && k.slice(8) === dd).sort().reverse().slice(0, 6);
+    $("#onThisDay").innerHTML = hits.length
+      ? hits.map(k => {
+          const d = S.days[k];
+          const first = d.entries[0]?.text || (d.photos?.length ? "photos only" : "no page written");
+          return `<div class="day"><div class="d">${k}</div><p>${escape(first).slice(0, 140)}${first.length > 140 ? "…" : ""}</p></div>`;
+        }).join("")
+      : `<p class="sub">no earlier pages on this date yet.</p>`;
+  }
+
+  function renderMemory() {
+    document.querySelectorAll("#periods button").forEach(b => b.classList.toggle("on", b.dataset.p === memPeriod));
+    const keys = rangeKeys(memPeriod);
+    renderSummary(memPeriod, keys);
+
+    const ids = keys.flatMap(k => S.days[k]?.photos || []);
+    $("#photoGrid").innerHTML = "";
+    if (ids.length) paintThumbs($("#photoGrid"), ids.slice(0, 60));
+    else $("#photoGrid").innerHTML = `<p class="sub">no photos in this stretch yet</p>`;
+
+    const pages = keys.map(k => [k, S.days[k]])
+      .filter(([, d]) => d && (d.entries.length || (d.photos || []).length))
+      .sort((a, b) => b[0].localeCompare(a[0])).slice(0, 40);
+    $("#memories").innerHTML = pages.length
+      ? pages.map(([k, d]) => {
+          const head = new Date(k + "T00:00").toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+          const body = d.entries.map(e => `<p>${escape(e.text).slice(0, 260)}${e.text.length > 260 ? "…" : ""}</p>`).join("");
+          const stats = [
+            d.mood && `<span class="chip">${escape(d.mood)}</span>`,
+            d.done.length && `<span class="chip">${d.done.length} quest${d.done.length > 1 ? "s" : ""} done</span>`,
+            d.focus && `<span class="chip focus">${d.focus} min</span>`,
+            (d.habits && Object.keys(d.habits).length) && `<span class="chip">${Object.keys(d.habits).length} habits</span>`,
+            d.xp && `<span class="chip xp">${d.xp > 0 ? "+" : ""}${d.xp} xp</span>`
+          ].filter(Boolean).join("");
+          const pics = (d.photos || []).length ? `<div class="thumbs" data-ids="${d.photos.join(",")}"></div>` : "";
+          return `<div class="day"><div class="d">${head}</div>${body}${pics}<div class="stats">${stats}</div></div>`;
+        }).join("")
+      : `<p class="sub" style="margin-top:10px">nothing in this stretch yet. write a page or add a photo and it shows up here.</p>`;
+    $("#memories").querySelectorAll("[data-ids]").forEach(el => paintThumbs(el, el.dataset.ids.split(",")));
+
+    renderOnThisDay();
+  }
+  document.querySelectorAll("#periods button").forEach(b => b.onclick = () => { memPeriod = b.dataset.p; renderMemory(); });
+
+  // ================= backup: export / import everything, photos included =================
+  const blobToDataURL = b => new Promise(res => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(b); });
+
+  async function exportBackup() {
+    const ids = new Set(Object.values(S.days).flatMap(d => d.photos || []));
+    const photos = {};
+    for (const id of ids) {
+      const b = await idbGet(id);
+      if (b) photos[id] = await blobToDataURL(b);
+    }
+    const blob = new Blob([JSON.stringify({ v: 2, S, photos })], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `my-little-study-${today()}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    toast("backup saved ♡");
+  }
+
+  async function importBackup(file) {
+    let data;
+    try { data = JSON.parse(await file.text()); } catch { return toast("that file didn't open"); }
+    if (!data || !data.S) return toast("that's not a journal backup");
+    S = Object.assign({}, blank, data.S);
+    S.pomo = Object.assign({}, blank.pomo, S.pomo || {});
+    for (const [id, url] of Object.entries(data.photos || {})) {
+      await idbPut(id, await (await fetch(url)).blob());
+    }
+    save(); applyTheme(S.theme); refresh();
+    toast("backup restored ♡");
+  }
+
+  $("#exportBtn").onclick = exportBackup;
+  $("#importBtn").onclick = () => $("#importIn").click();
+  $("#importIn").onchange = e => { const f = e.target.files[0]; if (f) importBackup(f); e.target.value = ""; };
+
+  // ================= budget (monthly) =================
+  function renderBudget() {
+    const now = new Date();
+    const monthPrefix = `${now.getFullYear()}-${pad(now.getMonth()+1)}`;
+    $("#monthTitle").textContent = now.toLocaleDateString("en-IN", { month:"long", year:"numeric" });
+    const monthSpends = S.spends.filter(s => s.date.startsWith(monthPrefix));
+    const total = monthSpends.reduce((a,b)=>a+b.amt,0);
+    $("#budget").value = S.budget || "";
+    $("#spent").textContent = "₹" + total.toLocaleString("en-IN");
+    const l = (S.budget||0) - total;
+    $("#left").textContent = "₹" + l.toLocaleString("en-IN");
+    $("#left").className = l < 0 ? "neg" : "pos";
+    $("#spends").innerHTML = monthSpends.slice().reverse().slice(0,10).map(s =>
+      `<li><span class="t">${escape(s.cat||"spent")}</span><span class="chip">${s.date.slice(8)} · ₹${s.amt}</span>
+        <button class="x" data-sdel="${s.id}" aria-label="delete">×</button></li>`).join("");
+    $("#spends").querySelectorAll("[data-sdel]").forEach(b => b.onclick = () => {
+      const s = S.spends.find(x => x.id == b.dataset.sdel);
+      if (s) { S.spends = S.spends.filter(x => x !== s); dayRec(s.date).spent -= s.amt; save(); refresh(); }
+    });
+  }
+  $("#budget").onchange = () => { S.budget = parseFloat($("#budget").value) || 0; save(); refresh(); };
+  $("#addSpend").onclick = () => {
+    const amt = parseFloat($("#amt").value); if (!amt) return toast("enter an amount");
+    const date = today();
+    S.spends.push({ id: Date.now(), amt, cat: $("#cat").value.trim(), date });
+    dayRec(date).spent += amt;
+    $("#amt").value = ""; $("#cat").value = "";
+    gain(2, "spend logged"); refresh();
+  };
+
+  // ================= music: built-in lofi + spotify =================
+  let ac = null, lofiMaster = null, lofiNoise = null, lofiSched = null, lofiStep = 0, lofiNext = 0;
+
+  function startLofi() {
+    if (!S.lofi) return;
+    if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
+    ac.resume();
+    if (lofiMaster) return;
+
+    lofiMaster = ac.createGain();
+    lofiMaster.gain.value = 0;
+    lofiMaster.connect(ac.destination);
+    lofiMaster.gain.setTargetAtTime(0.5, ac.currentTime, 0.6);
+
+    // soft vinyl hiss underneath everything
+    const nb = ac.createBuffer(1, ac.sampleRate * 2, ac.sampleRate), nd = nb.getChannelData(0);
+    for (let i = 0; i < nd.length; i++) nd[i] = Math.random() < 0.002 ? (Math.random() * 2 - 1) : (Math.random() * 2 - 1) * 0.02;
+    lofiNoise = ac.createBufferSource(); lofiNoise.buffer = nb; lofiNoise.loop = true;
+    const ng = ac.createGain(); ng.gain.value = 0.4;
+    lofiNoise.connect(ng).connect(lofiMaster); lofiNoise.start();
+
+    const CHORDS = [[261.63, 329.63, 392, 493.88], [220, 261.63, 329.63, 392],
+                    [174.61, 220, 261.63, 329.63], [196, 246.94, 293.66, 349.23]];
+    const beat = 60 / 76;
+    const m = lofiMaster;
+
+    const pad = (freqs, t, dur) => freqs.forEach(f => {
+      const o = ac.createOscillator(), g = ac.createGain(), lp = ac.createBiquadFilter();
+      o.type = "triangle"; o.frequency.value = f;
+      lp.type = "lowpass"; lp.frequency.value = 900;
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.09, t + 0.5);
+      g.gain.linearRampToValueAtTime(0, t + dur);
+      o.connect(lp).connect(g).connect(m);
+      o.start(t); o.stop(t + dur + 0.05);
+    });
+    const kick = t => {
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(40, t + 0.15);
+      g.gain.setValueAtTime(0.6, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+      o.connect(g).connect(m); o.start(t); o.stop(t + 0.32);
+    };
+    const hat = t => {
+      const len = Math.floor(ac.sampleRate * 0.03), b = ac.createBuffer(1, len, ac.sampleRate), d = b.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+      const s = ac.createBufferSource(), hp = ac.createBiquadFilter(), g = ac.createGain();
+      s.buffer = b; hp.type = "highpass"; hp.frequency.value = 7000; g.gain.value = 0.06;
+      s.connect(hp).connect(g).connect(m); s.start(t);
+    };
+
+    // 4-chord loop, one chord per bar of 8 eighth-notes
+    const schedule = () => {
+      while (lofiNext < ac.currentTime + 0.5) {
+        const s = lofiStep % 8, bar = Math.floor(lofiStep / 8) % 4;
+        if (s === 0) pad(CHORDS[bar], lofiNext, beat * 4);
+        if (s === 0 || s === 5) kick(lofiNext);
+        if (s % 2 === 0) hat(lofiNext);
+        lofiNext += beat / 2; lofiStep++;
+      }
+    };
+    lofiNext = ac.currentTime + 0.1; lofiStep = 0;
+    schedule();
+    lofiSched = setInterval(schedule, 120);
+  }
+
+  function stopLofi() {
+    if (!lofiMaster) return;
+    clearInterval(lofiSched); lofiSched = null;
+    const m = lofiMaster, n = lofiNoise;
+    lofiMaster = null; lofiNoise = null;
+    m.gain.setTargetAtTime(0, ac.currentTime, 0.3);
+    setTimeout(() => { try { n && n.stop(); } catch {} m.disconnect(); }, 1200);
+  }
+
+  function renderLofi() {
+    const b = $("#lofiToggle");
+    b.textContent = S.lofi ? "lofi on ♪" : "lofi off";
+    b.className = S.lofi ? "kuro" : "ghost";
+  }
+  $("#lofiToggle").onclick = () => {
+    S.lofi = !S.lofi; save(); renderLofi();
+    if (!S.lofi) stopLofi();
+    else if (running()) startLofi();          // this tap is a user gesture, so audio is allowed
+    toast(S.lofi ? "lofi on ♪" : "lofi off");
+  };
+
+  // Spotify embed: a playlist link like open.spotify.com/playlist/XXXX?si=...
+  // Other sites can't be embedded inside the published page, so the playlist opens in a new tab
+  function renderSpotify() {
+    $("#spotifyBox").innerHTML = S.spotify
+      ? `<a class="chip xp" style="display:inline-block;padding:8px 14px;font-size:14px;text-decoration:none"
+           href="https://open.spotify.com/playlist/${S.spotify}" target="_blank" rel="noopener">open my playlist on spotify ↗</a>`
+      : "";
+  }
+  $("#spSave").onclick = () => {
+    const m = $("#spLink").value.trim().match(/playlist[\/:]([A-Za-z0-9]{10,})/);
+    if (!m) return toast("paste a spotify playlist link");
+    S.spotify = m[1]; $("#spLink").value = ""; save(); renderSpotify(); toast("playlist saved ♪");
+  };
+
+  // ================= habits =================
+  const habitDone = (id, k = today()) => !!S.days[k]?.habits?.[id];
+
+  function habitStreak(id) {
+    let k = today(), n = 0;
+    if (!habitDone(id, k)) k = addDays(k, -1);   // today not ticked yet: streak still counts up to yesterday
+    while (habitDone(id, k)) { n++; k = addDays(k, -1); }
+    return n;
+  }
+
+  // 30 daily completion values (0..1), smoothed with a 7-day average for the line
+  function habitSeries(scope) {
+    const N = 15;
+    const keys = Array.from({ length: N }, (_, i) => addDays(today(), i - (N - 1)));
+    const hs = scope === "all" ? S.habits : S.habits.filter(h => h.id == scope);
+    const raw = keys.map(k => hs.length ? hs.filter(h => habitDone(h.id, k)).length / hs.length : 0);
+    return raw.map((_, i) => {
+      const sl = raw.slice(Math.max(0, i - 2), i + 1);
+      return sl.reduce((a, b) => a + b, 0) / sl.length;
+    });
+  }
+
+  function drawChart(vals) {
+    const W = 320, H = 210, L = 38, R = 12, T = 12, B = 28, n = vals.length;
+    const x = i => L + i * (W - L - R) / (n - 1);
+    const y = v => T + (1 - v) * (H - T - B);
+    const pts = vals.map((v, i) => [x(i), y(v)]);
+    const line = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+    const area = `${line} L${x(n-1).toFixed(1)} ${y(0)} L${x(0).toFixed(1)} ${y(0)} Z`;
+    const grid = [0, .5, 1].map(g =>
+      `<line class="grid" x1="${L}" x2="${W-R}" y1="${y(g)}" y2="${y(g)}"/>
+       <text x="2" y="${(y(g) + 3).toFixed(1)}">${Math.round(g * 100)}%</text>`).join("");
+    const labels = [0, 5, 10, n - 1].map(i => {
+      const [yy, mm, dd] = addDays(today(), i - (n - 1)).split("-").map(Number);
+      const mon = new Date(yy, mm - 1, 1).toLocaleDateString("en-IN", { month: "short" });
+      const anchor = i === 0 ? "start" : i === n - 1 ? "end" : "middle";
+      return `<text x="${x(i).toFixed(1)}" y="${H - 6}" text-anchor="${anchor}">${dd} ${mon}</text>`;
+    }).join("");
+    const last = pts[n - 1];
+    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="habit completion over the last 30 days">
+      <defs><linearGradient id="hg" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0" style="stop-color:var(--sage);stop-opacity:.5"/>
+        <stop offset="1" style="stop-color:var(--sage);stop-opacity:0"/>
+      </linearGradient></defs>
+      ${grid}${labels}
+      <path d="${area}" fill="url(#hg)"/>
+      <path d="${line}" fill="none" style="stroke:var(--kuromi)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="4" style="fill:var(--amber)"/>
+    </svg>`;
+  }
+
+  function renderHabits() {
+    const ul = $("#habits");
+    ul.innerHTML = S.habits.map(h => `
+      <li>
+        <input type="checkbox" data-hid="${h.id}" ${habitDone(h.id) ? "checked" : ""} aria-label="done today">
+        <span class="t ${habitDone(h.id) ? "done" : ""}">${escape(h.name)}</span>
+        <span class="chip">🔥 ${habitStreak(h.id)}</span>
+        <button class="x" data-hdel="${h.id}" aria-label="delete habit">×</button>
+      </li>`).join("") || `<li><span class="sub">no habits yet — start with one small thing</span></li>`;
+
+    ul.querySelectorAll("input[type=checkbox]").forEach(cb => cb.onchange = () => {
+      const rec = dayRec();
+      rec.habits ||= {};
+      if (cb.checked) {
+        rec.habits[cb.dataset.hid] = true; rec.fed += 1; S.fed = (S.fed || 0) + 1;
+        save(); gain(5, "habit · totoro fed");
+      } else {
+        delete rec.habits[cb.dataset.hid];
+        rec.fed = Math.max(0, rec.fed - 1); S.fed = Math.max(0, (S.fed || 0) - 1);
+        save(); gain(-5);
+      }
+      refresh();
+    });
+    ul.querySelectorAll("[data-hdel]").forEach(b => b.onclick = () => {
+      S.habits = S.habits.filter(h => h.id != b.dataset.hdel);
+      save(); refresh();
+    });
+
+    const sel = $("#habitScope"), prev = sel.value;
+    sel.innerHTML = `<option value="all">all habits</option>` +
+      S.habits.map(h => `<option value="${h.id}">${escape(h.name)}</option>`).join("");
+    if ([...sel.options].some(o => o.value === prev)) sel.value = prev;
+
+    const series = habitSeries(sel.value || "all");
+    $("#habitChart").innerHTML = drawChart(series);
+
+    const doneToday = Object.keys(dayRec().habits || {}).filter(id => S.habits.some(h => h.id == id)).length;
+    const pct = S.habits.length ? Math.round(doneToday / S.habits.length * 100) : 0;
+    const week = Math.round(series.slice(-7).reduce((a, b) => a + b, 0) / 7 * 100);
+    $("#habitStats").textContent = S.habits.length
+      ? `today ${pct}% · last 7 days ${week}% · line = 3-day average`
+      : "add a habit to start your line";
+  }
+  $("#habitScope").onchange = renderHabits;
+  $("#addHabit").onclick = () => {
+    const v = $("#habitIn").value.trim(); if (!v) return toast("name the habit first");
+    S.habits.push({ id: Date.now(), name: v });
+    $("#habitIn").value = "";
+    save(); refresh();
+  };
+
+  // ================= themes =================
+  const THEME_BG = { dark:"#1E1812", soft:"#EFE6D4", ghibli:"#2F3D33", kuromi:"#1a1424" };
+  function applyTheme(name) {
+    if (!THEME_BG[name]) name = "dark";
+    S.theme = name;
+    document.documentElement.dataset.theme = name;
+    document.querySelector('meta[name="theme-color"]').content = THEME_BG[name];
+    document.querySelectorAll("#themes button").forEach(b => b.classList.toggle("on", b.dataset.theme === name));
+    save();
+  }
+  document.querySelectorAll("#themes button").forEach(b => b.onclick = () => {
+    applyTheme(b.dataset.theme);
+    toast(`${b.textContent.trim()} ✦`);
+  });
+
+  // ================= boot =================
+  applyTheme(S.theme);
+  renderLofi(); renderSpotify();
+  refresh();
+  startTicking();
+})();
+</script>
+</body>
+</html>
